@@ -1,5 +1,7 @@
 # entropy-in-pytorch
 A entropy hub by pytorch</br>
+Just in beginning</br>
+A sample for sample entropy:</br>
 <b> l: signal </br>
   m: windows length </br>
   r: threshold </br>
