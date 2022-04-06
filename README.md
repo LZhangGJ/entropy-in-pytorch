@@ -8,8 +8,18 @@ A sample for sample entropy:</br>
   ```
   e.g: 
   import torch
-  l = torch.randn(1000) /n
+  l = torch.randn(1000) 
   m = 2 
   r = torch.std(l)*0.25
   sampEn(l,m,r)
+  
+  
+  
+  '''
+  For batch Data (B,C,H)
+  The return shape should be (B,C)
+  '''
+  l = torch.randn([5,5,20])
+  sampEn_batch(l,m,r)
+  
   ```
