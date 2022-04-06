@@ -42,14 +42,17 @@ def sampEn(l,m,r):
 for batch signal, use sampEn_batch
 input size should be (B,C,H)
 """
-def sampEn_batch(l,m,r):
+def sampEn_batch(l,m,r = None):
+    if r is None:
+        r = torch.std(l,dim = -1)*0.25
     xi = torch.stack( [f.pad(l,(m-i-1,i,0,0,0,0)) for i in range(m)],dim = 2)
     xj = xi[:,:,:,m-1:xi.shape[-1]-1]
     xi = xi[:,:,:,m-1:xi.shape[-1]-2]
     b = 0
+    r1 = torch.stack([r for i in range(xi.shape[-1])],-1)
     for i in range(xj.shape[-1]):
         xj = torch.cat((xj[:,:,:,-1].unsqueeze(-1),xj[:,:,:,:-1]),axis = -1)
-        k = (torch.max(torch.abs(xi - xj[:,:,:,:-1]),dim = -2)[0] <=r)
+        k = (torch.max(torch.abs(xi - xj[:,:,:,:-1]),dim = -2)[0] <=r1)
         k = torch.sum(k,dim = -1)
         b+= k
     b-=xi.shape[-1]
@@ -58,12 +61,12 @@ def sampEn_batch(l,m,r):
     xi = torch.stack( [f.pad(l,(m-i-1,i,0,0,0,0)) for i in range(m)],dim = 2)
     xj = xi[:,:,:,m-1:xi.shape[-1]-2]
     xi = xi[:,:,:,m-1:xi.shape[-1]-2]
-
+    r1 = torch.stack([r for i in range(xi.shape[-1])],-1)
     a = 0
     for i in range(xj.shape[-1]):
         xj = torch.cat((xj[:,:,:,-1].unsqueeze(-1),xj[:,:,:,:-1]),axis = -1)
 
-        k = (torch.max(torch.abs(xi - xj),dim = -2)[0] <=r)
+        k = (torch.max(torch.abs(xi - xj),dim = -2)[0] <=r1)
         k = torch.sum(k,dim = -1)
         a+= k
     a -= xj.shape[-1]
