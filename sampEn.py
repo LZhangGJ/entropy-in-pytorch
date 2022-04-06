@@ -46,8 +46,6 @@ def sampEn_batch(l,m,r):
     xi = torch.stack( [f.pad(l,(m-i-1,i,0,0,0,0)) for i in range(m)],dim = 2)
     xj = xi[:,:,:,m-1:xi.shape[-1]-1]
     xi = xi[:,:,:,m-1:xi.shape[-1]-2]
-    print(xi.shape)
-    print(xj.shape)
     b = 0
     for i in range(xj.shape[-1]):
         xj = torch.cat((xj[:,:,:,-1].unsqueeze(-1),xj[:,:,:,:-1]),axis = -1)
@@ -55,14 +53,12 @@ def sampEn_batch(l,m,r):
         k = torch.sum(k,dim = -1)
         b+= k
     b-=xi.shape[-1]
-
-
     m+=1
 
     xi = torch.stack( [f.pad(l,(m-i-1,i,0,0,0,0)) for i in range(m)],dim = 2)
     xj = xi[:,:,:,m-1:xi.shape[-1]-2]
     xi = xi[:,:,:,m-1:xi.shape[-1]-2]
-    print (xj.shape)
+
     a = 0
     for i in range(xj.shape[-1]):
         xj = torch.cat((xj[:,:,:,-1].unsqueeze(-1),xj[:,:,:,:-1]),axis = -1)
@@ -70,6 +66,5 @@ def sampEn_batch(l,m,r):
         k = (torch.max(torch.abs(xi - xj),dim = -2)[0] <=r)
         k = torch.sum(k,dim = -1)
         a+= k
-        print(a)
     a -= xj.shape[-1]
     return(-torch.log(a/b))
