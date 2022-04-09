@@ -1,5 +1,6 @@
 # entropy-in-pytorch
 A entropy hub by pytorch</br>
+now in working
 Just in beginning</br>
 A sample for sample entropy:</br>
 <b> l: signal </br>
